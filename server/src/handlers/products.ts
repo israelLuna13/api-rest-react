@@ -1,22 +1,48 @@
 import {Request,Response} from 'express'
-import {check, validationResult} from 'express-validator'
 import Product from '../models/Product.model.js'
-export const createProduct = async(req:Request,res:Response)=>{
-    //validacion de los campos con express validator
-    await check("name").notEmpty().withMessage("El nombre del producto no puedo ir vacio").run(req)
-    await check("price")
-    .isNumeric().withMessage('Valor no valido')
-    .notEmpty().withMessage("El precio del producto no puedo ir vacio")
-    .custom(value => value > 0).run(req)
+//mis acciones
+//intentamos mantener solo el codigo que interactue con la dn
+//obtener por id
+export const getProductById = async(req:Request,res:Response)=>{
+    try {
+       console.log(req.params.id);
+       const {id} = req.params
+       const product = await Product.findByPk(id)
+       if(!product){
+        return res.status(404).json({
+            error:'Producto No Encontrado'
+        })
+       }
 
-
-    let erros = validationResult(req)
-    //verificamos si hay errores
-    if(!erros.isEmpty()){
-        return res.status(400).json({errors:erros.array()})
+       res.json({data:product})
+       
+    } catch (error) {
+        console.log(error);
     }
-    //creamos el producto en la db
+}
+//obtener todos los productos
+export const getProducts = async(req:Request,res:Response)=>{
+    try {
+        const products = await Product.findAll({
+            order:[
+                ['price','DESC']
+            ]
+        })
+        res.json({data:products})
+    } catch (error) {
+        console.log(error);
+    }
+}
+//crear el producto
+export const createProduct = async(req:Request,res:Response)=>{
+    try {
+        //creamos el producto en la db
     const product = await Product.create(req.body)
     //regresamos el producto creado
     res.json({data:product})
+        
+    } catch (error) {
+        console.log(error);
+        
+    }
 }
