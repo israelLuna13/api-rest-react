@@ -1,5 +1,5 @@
 import {Request,Response} from 'express'
-import Product from '../models/Product.model.js'
+import Product from '../models/Product.model'
 //mis acciones
 //intentamos mantener solo el codigo que interactue con la dn
 //obtener por id
@@ -46,3 +46,48 @@ export const createProduct = async(req:Request,res:Response)=>{
         
     }
 }
+//actalizar el producto
+export const updateProduct = async (req:Request,res:Response)=>{
+    const {id} = req.params    
+    const product = await Product.findByPk(id)
+    if(!product){
+     return res.status(404).json({
+         error:'Producto No Encontrado'
+     })
+    }
+
+    //actualizar el producto entero
+    await product.update(req.body)
+    await product.save()
+    res.json({data:product})
+}
+//modificar el producto con patch
+export const updateAvailabilit = async (req:Request,res:Response)=>{
+    const {id} = req.params    
+    const product = await Product.findByPk(id)
+    if(!product){
+     return res.status(404).json({
+         error:'Producto No Encontrado'
+     })
+    }
+
+    //modificar
+   //cambiamos solo el estado del producto cada vez que se envie una peticion
+   product.availability= !product.dataValues.availability
+    await product.save()
+    res.json({data:product})
+}
+//eliminar
+export const deleteProduct = async (req:Request,res:Response)=>{
+    const {id} = req.params    
+    const product = await Product.findByPk(id)
+    if(!product){
+     return res.status(404).json({
+         error:'Producto No Encontrado'
+     })
+    }
+    await product.destroy()
+    res.json({data:'Producto eliminado'})
+    
+}
+

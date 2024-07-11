@@ -1,4 +1,4 @@
-import server from "./server.js";
+import server from "./server";
 import colors from 'colors'
 server.listen(4000,()=>{
     const PORT = process.env.PORT  ||4000
