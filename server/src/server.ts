@@ -2,6 +2,8 @@ import express from 'express'
 import colors from 'colors'
 import router from './router'
 import db from './config/db'
+import swaggerUi from 'swagger-ui-express'
+import swaggerSpec,{swaggweUiOption} from './config/swagger'
 
 //instancia de express
 const server = express()
@@ -25,9 +27,7 @@ conectDB()
 //rutas
 server.use('/api/products',router)
 
-server.get('/api',(req,res)=>{
-    res.json({msg:'Desde Api'})
-})
-
+//Docs
+server.use('/docs',swaggerUi.serve,swaggerUi.setup(swaggerSpec,swaggweUiOption))
 
 export default server

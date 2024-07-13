@@ -2,22 +2,6 @@ import request from 'supertest'
 import server , {conectDB} from '../server'
 import db from '../config/db'
 
-//pruebas
-//debemos obtener un json
-describe('GET/api',()=>{
-    it('should send back a json response', async()=>{
-        const res = await request(server).get('/api')
-
-        //lo que se espera de la respuesta
-        expect(res.status).toBe(200)
-        expect(res.headers['content-type']).toMatch(/json/)
-        expect(res.body.msg).toBe('Desde Api')
-        //lo que no se espera de la respuesta
-        expect(res.status).not.toBe(404)
-        expect(res.body.msg).not.toBe('desde api')
-    })
-})
-
 //simulamos la conexion a la base de datos
 jest.mock('../config/db')
 
