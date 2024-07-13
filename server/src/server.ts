@@ -9,7 +9,7 @@ const server = express()
 server.use(express.json())
 
 //conectar a db
-async function conectDB() {
+export async function conectDB() {
 
     try {
         await db.authenticate()
