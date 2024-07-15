@@ -1,4 +1,4 @@
-import { Link,Form, useActionData, ActionFunctionArgs } from "react-router-dom";
+import { Link,Form, useActionData, ActionFunctionArgs ,redirect} from "react-router-dom";
 import ErrorMessage from "../components/ErrorMessage";
 import { addProduct } from "../services/ProductService";
 //manejar los datos del formulario
@@ -10,15 +10,18 @@ export async function action({request}:ActionFunctionArgs){
   if(Object.values(data).includes('')){
     error= 'Todos los campos son obligatorios'
   }
+
   if(error.length){
     return error
   }
-  addProduct(data)
-  return {}
+  //esperamos a que se inserte en la db
+  await addProduct(data)
+  //redireccionamos
+  return redirect('/')
   
 }
 export default function NewProduct() {
-  //recuperamos datos del formulario
+  //recuperamos los que nos regrese el action
   const error = useActionData() as string
   
   return (
